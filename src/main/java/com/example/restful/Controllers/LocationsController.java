@@ -35,42 +35,41 @@ public class LocationsController {
     }
 
     @PostMapping()
-    public ResponseEntity<LocationModels> AddPoint(@RequestParam Double latitude,
-                                                   @RequestParam Double longitude){
+    public ResponseEntity<LocationModels> AddPoint(@RequestBody LocationModels location){
 
-        if((latitude > 90 || latitude < -90) && (longitude > 180 || longitude < -180)){
+        if((location.getLatitude() > 90 || location.getLatitude() < -90) &&
+                (location.getLongitude() > 180 || location.getLongitude() < -180)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        LocationModels location = locationService.AddLocation(latitude, longitude);
+        LocationModels existingLocation = locationService.AddLocation(location.getLatitude(), location.getLongitude());
 
-        if(location == null){
+        if(existingLocation == null){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(location);
+        return ResponseEntity.status(HttpStatus.CREATED).body(existingLocation);
     }
 
     @PutMapping("{pointId}")
     public ResponseEntity<Optional<LocationModels>> UpdateLocation(@PathVariable Long pointId,
-                                                                   @RequestParam Double latitude,
-                                                                   @RequestParam Double longitude){
+                                                                   @RequestBody LocationModels location){
 
-        if((latitude > 90 || latitude < -90) && (longitude > 180 || longitude < -180)){
+        if((location.getLatitude() > 90 || location.getLatitude() < -90) && (location.getLongitude() > 180 || location.getLongitude() < -180)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        Optional<LocationModels> location = locationService.GetLocationId(pointId);
+        Optional<LocationModels> existingLocation = locationService.GetLocationId(pointId);
 
-        if(location.isEmpty()){
+        if(existingLocation.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        if(!locationService.UpdateLocation(pointId,latitude,longitude)){
+        if(!locationService.UpdateLocation(pointId,location.getLatitude(), location.getLongitude())){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(location);
+        return ResponseEntity.status(HttpStatus.OK).body(existingLocation);
     }
 
     @DeleteMapping("{pointId}")

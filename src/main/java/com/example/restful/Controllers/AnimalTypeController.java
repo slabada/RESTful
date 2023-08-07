@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("animals/type")
+@RequestMapping("animals/types")
 public class AnimalTypeController {
 
     protected final AnimalTypeService animalTypeService;
@@ -37,13 +37,13 @@ public class AnimalTypeController {
     }
 
     @PostMapping()
-    public ResponseEntity<AnimalTypeModels> AddAnimalType(@RequestParam String Type){
+    public ResponseEntity<AnimalTypeModels> AddAnimalType(@RequestBody AnimalTypeModels animalType){
 
-        if(Type == null){
+        if(animalType == null){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        AnimalTypeModels AnimalType = animalTypeService.AddAnimalModel(Type);
+        AnimalTypeModels AnimalType = animalTypeService.AddAnimalModel(animalType.getType());
 
         if(AnimalType == null){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -54,9 +54,9 @@ public class AnimalTypeController {
 
     @PutMapping("{typeId}")
     public ResponseEntity<AnimalTypeModels> UpdateAnimalType(@PathVariable Long typeId,
-                                                             @NotBlank String Type){
+                                                             @RequestBody AnimalTypeModels animalType){
 
-        if((typeId == null || typeId <= 0)){
+        if(typeId == null || typeId <= 0){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -66,9 +66,9 @@ public class AnimalTypeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        AnimalTypeModels animalType = animalTypeService.UpdateAnimalType(typeId, Type);
+        AnimalTypeModels updatedAnimalType = animalTypeService.UpdateAnimalType(typeId, animalType.getType());
 
-        if(animalType == null){
+        if(updatedAnimalType == null){
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 

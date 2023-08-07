@@ -1,9 +1,7 @@
 package com.example.restful.Controllers;
 
 import com.example.restful.Models.AccountsModels;
-import com.example.restful.Response.AccountResponse;
 import com.example.restful.Service.AccountService;
-import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,7 +19,7 @@ public class AuthenticationController {
     }
 
     @PostMapping
-    public ResponseEntity<AccountResponse> registrationAccount(@Valid @ModelAttribute AccountsModels accounts,
+    public ResponseEntity<AccountsModels> registrationAccount(@RequestBody AccountsModels accounts,
                                                                BindingResult bindingResult,
                                                                Authentication authentication){
 
@@ -41,13 +39,6 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-        AccountResponse accountResponse = new AccountResponse(
-                accounts.getId(),
-                accounts.getFirstName(),
-                accounts.getLastName(),
-                accounts.getEmail()
-        );
-
-        return new ResponseEntity(accountResponse, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(accounts);
     }
 }

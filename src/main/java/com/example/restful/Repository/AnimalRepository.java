@@ -33,6 +33,7 @@ public interface AnimalRepository extends JpaRepository<AnimalsModels, Long> {
             @Param("chippingDateTime") Date chippingDateTime,
             @Param("chipperId") Integer chipperId,
             @Param("chippingLocationId") Long chippingLocationId,
-            @Param("deathDateTime") Date deathDateTime
+            @Param("deathDateTime") Date deathDateTime,
+            PageRequest pageRequest
     );
 }

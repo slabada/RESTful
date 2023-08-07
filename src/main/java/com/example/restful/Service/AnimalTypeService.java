@@ -1,10 +1,16 @@
 package com.example.restful.Service;
 
 import com.example.restful.Models.AnimalTypeModels;
+import com.example.restful.Models.AnimalsModels;
 import com.example.restful.Repository.AnimalTypeRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class AnimalTypeService {
@@ -70,5 +76,18 @@ public class AnimalTypeService {
         animalTypeRepository.deleteById(typeId);
 
         return true;
+    }
+
+    public Set<AnimalTypeModels> CheckTypeAnimal(AnimalsModels animal){
+        Set<AnimalTypeModels> existingAnimalTypes = new HashSet<>();
+        for (AnimalTypeModels animalType : animal.getAnimalTypes()) {
+            AnimalTypeModels existingAnimalType = animalTypeRepository.findByType(animalType.getType());
+            if (existingAnimalType != null) {
+                existingAnimalTypes.add(existingAnimalType);
+            } else {
+                return null;
+            }
+        }
+        return existingAnimalTypes;
     }
 }

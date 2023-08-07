@@ -1,5 +1,6 @@
 package com.example.restful.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -11,10 +12,8 @@ public class LocationModels {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
-
     @NotNull
-    public Double latitude;
-
+    private Double latitude;
     @NotNull
-    public Double longitude;
+    private Double longitude;
 }

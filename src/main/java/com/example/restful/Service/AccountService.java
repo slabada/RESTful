@@ -1,8 +1,8 @@
 package com.example.restful.Service;
 
 import com.example.restful.Models.AccountsModels;
+import com.example.restful.Models.AnimalsModels;
 import com.example.restful.Repository.AccountRepository;
-import com.example.restful.Response.AccountResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -65,7 +65,7 @@ public class AccountService implements UserDetailsService {
         return true;
     }
 
-    public AccountResponse updateDataAccount(Integer AccountID,
+    public AccountsModels updateDataAccount(Integer AccountID,
                                              AccountsModels account,
                                              AccountsModels AuthAccount){
 
@@ -81,14 +81,7 @@ public class AccountService implements UserDetailsService {
 
         accountRepository.save(AccountDb);
 
-        AccountResponse response = new AccountResponse(
-                AccountDb.getId(),
-                AccountDb.getFirstName(),
-                AccountDb.getLastName(),
-                AccountDb.getEmail()
-        );
-
-        return response;
+        return AccountDb;
     }
 
     public boolean Delete(Integer AccountId,
@@ -105,13 +98,13 @@ public class AccountService implements UserDetailsService {
         return true;
     }
 
-    public List<AccountResponse> search(@ModelAttribute AccountsModels account,
+    public List<AccountsModels> search(@ModelAttribute AccountsModels account,
                                         int from,
                                         int size){
 
         PageRequest pageable = PageRequest.of(from, size);
 
-        List<AccountResponse> accounts = accountRepository.findByFirstNameOrLastNameOrEmail(
+        List<AccountsModels> accounts = accountRepository.findByFirstNameOrLastNameOrEmail(
                 account.getFirstName(),
                 account.getLastName(),
                 account.getEmail(),
@@ -119,5 +112,13 @@ public class AccountService implements UserDetailsService {
         );
 
         return accounts;
+    }
+
+    public boolean CheckChipperId(AnimalsModels animal){
+        AccountsModels accountChipperId = accountRepository.findById(animal.getChipperId());
+        if(accountChipperId == null){
+            return false;
+        }
+        return true;
     }
 }

@@ -1,10 +1,13 @@
 package com.example.restful.Service;
 
+import com.example.restful.Models.AnimalsModels;
 import com.example.restful.Models.LocationModels;
 import com.example.restful.Repository.LocationRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class LocationService {
@@ -29,8 +32,8 @@ public class LocationService {
 
         LocationModels response = new LocationModels();
 
-        response.longitude = longitude;
-        response.latitude = latitude;
+        response.setLongitude(longitude);
+        response.setLatitude(latitude);
 
         locationRepository.save(response);
 
@@ -69,4 +72,21 @@ public class LocationService {
 
         return true;
     }
+
+    public Set<LocationModels> CheckChippingLocationId(AnimalsModels animal){
+        Set<LocationModels> existingLocations = new HashSet<>();
+        for(LocationModels location : animal.getVisitedLocations()){
+            LocationModels existingLocation = locationRepository.findByLatitudeAndLongitude(
+                    location.getLatitude(),
+                    location.getLatitude());
+
+            if(existingLocation != null){
+                existingLocations.add(existingLocation);
+            }else {
+                return null;
+            }
+        }
+        return existingLocations;
+    }
+
 }
