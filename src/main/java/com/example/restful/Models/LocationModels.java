@@ -11,7 +11,8 @@ import lombok.Data;
 public class LocationModels {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
+    @JsonIgnore
+    private Long id;
     @NotNull
     private Double latitude;
     @NotNull

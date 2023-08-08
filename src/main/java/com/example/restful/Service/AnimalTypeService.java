@@ -80,13 +80,18 @@ public class AnimalTypeService {
 
     public Set<AnimalTypeModels> CheckTypeAnimal(AnimalsModels animal){
         Set<AnimalTypeModels> existingAnimalTypes = new HashSet<>();
-        for (AnimalTypeModels animalType : animal.getAnimalTypes()) {
-            AnimalTypeModels existingAnimalType = animalTypeRepository.findByType(animalType.getType());
-            if (existingAnimalType != null) {
-                existingAnimalTypes.add(existingAnimalType);
-            } else {
-                return null;
+        if(animal.getAnimalTypes() != null){
+            for (AnimalTypeModels animalType : animal.getAnimalTypes()) {
+                AnimalTypeModels existingAnimalType = animalTypeRepository.findByType(animalType.getType());
+                if (existingAnimalType != null) {
+                    existingAnimalTypes.add(existingAnimalType);
+                } else {
+                    return null;
+                }
             }
+        }
+        else {
+            return null;
         }
         return existingAnimalTypes;
     }

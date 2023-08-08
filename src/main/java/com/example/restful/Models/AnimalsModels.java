@@ -1,6 +1,7 @@
 package com.example.restful.Models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 public class AnimalsModels {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -25,16 +27,19 @@ public class AnimalsModels {
     private float height;
     private String gender;
     private String lifeStatus;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mmX")
     private Date chippingDateTime;
     private int chipperId;
     private long chippingLocationId;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             joinColumns = @JoinColumn(name = "Animal_id"),
             inverseJoinColumns = @JoinColumn(name="Location_id")
     )
     private Set<LocationModels> visitedLocations;
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonFormat(pattern="yyyy-MM-dd'T'HH:mmX")
     private Date deathDateTime;
 }

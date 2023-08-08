@@ -73,19 +73,25 @@ public class LocationService {
         return true;
     }
 
-    public Set<LocationModels> CheckChippingLocationId(AnimalsModels animal){
+    public Set<LocationModels> CheckVisitedLocationId(AnimalsModels animal){
         Set<LocationModels> existingLocations = new HashSet<>();
-        for(LocationModels location : animal.getVisitedLocations()){
-            LocationModels existingLocation = locationRepository.findByLatitudeAndLongitude(
-                    location.getLatitude(),
-                    location.getLatitude());
+        if(animal.getVisitedLocations() != null){
+            for(LocationModels location : animal.getVisitedLocations()){
+                LocationModels existingLocation = locationRepository.findByLatitudeAndLongitude(
+                        location.getLatitude(),
+                        location.getLatitude());
 
-            if(existingLocation != null){
-                existingLocations.add(existingLocation);
-            }else {
-                return null;
+                if(existingLocation != null){
+                    existingLocations.add(existingLocation);
+                }else {
+                    return null;
+                }
             }
         }
+        else {
+            return null;
+        }
+
         return existingLocations;
     }
 

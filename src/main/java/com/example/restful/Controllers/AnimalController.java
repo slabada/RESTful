@@ -82,10 +82,51 @@ public class AnimalController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        if(locationService.CheckChippingLocationId(animal) == null){
+        if(locationService.CheckVisitedLocationId(animal) == null){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).body(animalService.AddAnimal(animal));
+    }
+
+    @PutMapping("{animalId}")
+    public ResponseEntity<AnimalsModels> UpdateAnimal(@PathVariable Long animalId,
+                                                      @RequestBody AnimalsModels animal){
+
+        if(animalId == null || animalId <= 0 ||
+                animal.getWeight() <= 0 ||
+                animal.getLength() <= 0 ||
+                animal.getHeight() <= 0 ||
+                (!animal.getGender().equals("MALE") && !animal.getGender().equals("FEMALE") && !animal.getGender().equals("OTHER")) ||
+                animal.getChipperId() <= 0 || animal.getChippingLocationId() <= 0){
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if(!animalService.UpdateLifeStatus(animal)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        AnimalsModels animals = animalService.UpdateAnimal(animalId,animal);
+
+        if(animals == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(animals);
+    }
+
+    @DeleteMapping("{animalId}")
+    public ResponseEntity<HttpStatus> DeleteAnimal(@PathVariable Long animalId){
+
+        if(animalId == null || animalId <= 0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        if(!animalService.DeleteAnimal(animalId)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
